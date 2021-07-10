@@ -6,10 +6,10 @@
 int main(int argc, char const *argv[])
 {
 
-  char *buffer;
+  char *buffer = NULL;
   const char s[2] = ","; //onde havera o split;
   size_t bufsize = 0;
-  size_t qtdChar;
+  ssize_t qtdChar;
 
   unsigned int k;
 
@@ -72,7 +72,6 @@ int main(int argc, char const *argv[])
   {
     m++;
   }
-  printf("M: %d\n", m);
 
   //Reinicia leitura do arquivo de entrada
   rewind(inputFile);
@@ -82,7 +81,7 @@ int main(int argc, char const *argv[])
   double vetorCoordenadas[m];
   unsigned int posi;
 
-  while (qtdChar > 0)
+  while (qtdChar >= 0)
   {
     posi = 0;
     n++;
