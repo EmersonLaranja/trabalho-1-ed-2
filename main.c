@@ -1,15 +1,17 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+
 #include <stdbool.h>
+#include "point.h"
+
+void fillMatrix(unsigned int n, float pointsMatrix[][n], Point **points, unsigned int m);
+void printMatrix(unsigned int n, float pointsMatrix[][n], unsigned int m);
 
 int main(int argc, char const *argv[])
 {
 
   char *buffer = NULL;
-  const char s[2] = ","; //onde havera o split;
   size_t bufsize = 0;
-  ssize_t qtdChar;
+  ssize_t qtdChar = 0;
+  const char comma[2] = ","; //onde havera o split;
 
   unsigned int k;
 
@@ -47,32 +49,32 @@ int main(int argc, char const *argv[])
     exit(1);
   }
 
-  buffer = (char *)malloc(bufsize * sizeof(char));
-  if (buffer == NULL)
-  {
-    perror("Falha ao alocar buffer");
-    exit(1);
-  }
-
   unsigned int n = 0; //quantidade de elementos;
   unsigned int m = 0; //quantidade de coordenadas;
 
   char *id;
   char *coordenada;
-  char *stringPrimeirasCoordenadas;
+  bool boolean = true;
 
   //Faz a leitura da primeira linha
   qtdChar = getline(&buffer, &bufsize, inputFile);
 
-  //Le o id;
-  id = strtok(buffer, ",");
-
-  //Conta a qtd de coordenadas
-  while ((coordenada = strtok(NULL, ",")) != NULL)
+  while (qtdChar >= 0)
   {
-    m++;
-  }
+    n++;
 
+    //Le o id;
+    id = strtok(buffer, comma);
+
+    //Conta a qtd de coordenadas
+    while ((coordenada = strtok(NULL, comma)) != NULL && boolean)
+    {
+      m++;
+    }
+    boolean = false;
+
+    qtdChar = getline(&buffer, &bufsize, inputFile);
+  }
   //Reinicia leitura do arquivo de entrada
   rewind(inputFile);
 
@@ -80,35 +82,72 @@ int main(int argc, char const *argv[])
 
   double vetorCoordenadas[m];
   unsigned int posi;
+  unsigned int countPoints = 0;
+
+  Point *points[n];
 
   while (qtdChar >= 0)
   {
     posi = 0;
-    n++;
 
     //Le o id;
-    id = strtok(buffer, ",");
+    id = strtok(buffer, comma);
 
     //Le primeira coordenada;
-    coordenada = strtok(NULL, ",");
+    coordenada = strtok(NULL, comma);
     while (coordenada != NULL)
     {
       vetorCoordenadas[posi] = atof(coordenada); //armazena a coordenada no vetor;
       posi++;                                    // incrementa posição do vetor;
-      coordenada = strtok(NULL, ",");            //Lê a prox coordenada;
+      coordenada = strtok(NULL, comma);          //Lê a prox coordenada;
     }
 
-    printf("%s ", id);
-    for (unsigned int i = 0; i < m; i++)
-    {
-      printf("%lf ", vetorCoordenadas[i]);
-    }
-    printf("\n");
+    //Cria a Struct do Ponto;
+    Point *point = initPoint(point, id, vetorCoordenadas, m);
+    points[countPoints] = point;
+    countPoints++;
 
     qtdChar = getline(&buffer, &bufsize, inputFile);
-    //Cria a Struct do Ponto;
-    //segue a vida fml
   }
 
+  // Preencher Matriz de distancias
+  float pointsMatrix[n][n];
+  fillMatrix(n, pointsMatrix, points, m);
+  printMatrix(n, pointsMatrix, m);
+
+
+  for (unsigned int i = 0; i < n; i++)
+  {
+    destroyPoint(points[i]);
+  }
+
+  free(buffer);
+  fclose(inputFile);
+  fclose(logFile);
   return 0;
+}
+
+void fillMatrix(unsigned int n, float pointsMatrix[][n], Point **points, unsigned int m)
+{
+
+  for (unsigned int i = 0; i < (n - 1); i++)
+  {
+    for (unsigned int j = i + 1; j < n; j++)
+    {
+      pointsMatrix[j][i] = distance(points[i], points[j], m);
+    }
+  }
+}
+
+void printMatrix(unsigned int n, float pointsMatrix[][n], unsigned int m)
+{
+  for (unsigned int i = 0; i < n; i++)
+  {
+    for (unsigned int j = 0; j < i; j++)
+    {    
+      printf("%.2f ", pointsMatrix[i][j]);
+    
+  }
+    printf("\n");
+}
 }

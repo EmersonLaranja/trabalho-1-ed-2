@@ -4,6 +4,7 @@
     "cstdio": "cpp",
     "type_traits": "cpp",
     "typeinfo": "cpp",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "utils.h": "c"
   }
 }
