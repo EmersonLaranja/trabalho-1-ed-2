@@ -111,7 +111,7 @@ int main(int argc, char const *argv[])
   // double pointsMatrix[n][n];
   double **pointsMatrix = initMatrix(n, n);
   fillMatrix(n, pointsMatrix, points, m);
-  // printMatrix(n, pointsMatrix, m);
+  printMatrix(logFile,n, pointsMatrix, m);
 
   for (unsigned int i = 0; i < n; i++)
   {

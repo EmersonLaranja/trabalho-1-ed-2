@@ -12,15 +12,15 @@ void fillMatrix(unsigned int n, double **pointsMatrix, Point **points, unsigned 
   }
 }
 
-void printMatrix(unsigned int n, double **pointsMatrix, unsigned int m)
+void printMatrix(FILE *log, unsigned int n, double **pointsMatrix, unsigned int m)
 {
   for (unsigned int i = 0; i < n; i++)
   {
     for (unsigned int j = 0; j < i; j++)
     {
-      printf("%.2f ", pointsMatrix[i][j]);
+      fprintf(log, "%.2f ", pointsMatrix[i][j]);
     }
-    printf("\n");
+    fprintf(log, "\n");
   }
 }
 
