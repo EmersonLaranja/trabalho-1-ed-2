@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/main.out",
-      "args": [" in-exemplos/entrada.txt", "3", "saida.txt"],
+      "args": [" in-exemplos/5.txt", "10", "saida.txt"],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],

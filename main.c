@@ -2,8 +2,10 @@
 #include <stdbool.h>
 #include "point.h"
 
-void fillMatrix(unsigned int n, float pointsMatrix[][n], Point **points, unsigned int m);
-void printMatrix(unsigned int n, float pointsMatrix[][n], unsigned int m);
+void fillMatrix(unsigned int n, double **pointsMatrix, Point **points, unsigned int m);
+void printMatrix(unsigned int n, double **pointsMatrix, unsigned int m);
+double **initMatrix(int nlines, int ncolumns);
+double **destroyMatrix(double **matrix, int nlines, int ncolumns);
 
 int main(int argc, char const *argv[])
 {
@@ -111,23 +113,24 @@ int main(int argc, char const *argv[])
   }
 
   // Preencher Matriz de distancias
-  float pointsMatrix[n][n];
+  // double pointsMatrix[n][n];
+  double **pointsMatrix = initMatrix(n, n);
   fillMatrix(n, pointsMatrix, points, m);
-  printMatrix(n, pointsMatrix, m);
-
+  // printMatrix(n, pointsMatrix, m);
 
   for (unsigned int i = 0; i < n; i++)
   {
     destroyPoint(points[i]);
   }
 
+  destroyMatrix(pointsMatrix, n, n);
   free(buffer);
   fclose(inputFile);
   fclose(logFile);
   return 0;
 }
 
-void fillMatrix(unsigned int n, float pointsMatrix[][n], Point **points, unsigned int m)
+void fillMatrix(unsigned int n, double **pointsMatrix, Point **points, unsigned int m)
 {
 
   for (unsigned int i = 0; i < (n - 1); i++)
@@ -139,15 +142,31 @@ void fillMatrix(unsigned int n, float pointsMatrix[][n], Point **points, unsigne
   }
 }
 
-void printMatrix(unsigned int n, float pointsMatrix[][n], unsigned int m)
+void printMatrix(unsigned int n, double **pointsMatrix, unsigned int m)
 {
   for (unsigned int i = 0; i < n; i++)
   {
     for (unsigned int j = 0; j < i; j++)
-    {    
+    {
       printf("%.2f ", pointsMatrix[i][j]);
-    
-  }
+    }
     printf("\n");
+  }
 }
+
+double **initMatrix(int nlines, int ncolumns)
+{
+
+  double **m = (double **)malloc(sizeof(double *) * nlines);
+  for (int i = 0; i < nlines; i++)
+    m[i] = (double *)malloc(ncolumns * sizeof(double));
+  return m;
+}
+
+double **destroyMatrix(double **matrix, int nlines, int ncolumns)
+{
+
+  for (int i = 0; i < nlines; i++)
+    free(matrix[i]);
+  free(matrix);
 }
