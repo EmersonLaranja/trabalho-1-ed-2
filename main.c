@@ -1,10 +1,12 @@
 
 #include <stdbool.h>
 #include "matrix.h"
+#include <time.h>
+// #include "edge.h"
 
 int main(int argc, char const *argv[])
 {
-
+  clock_t start, stop;
   char *buffer = NULL;
   size_t bufsize = 0;
   ssize_t qtdChar = 0;
@@ -52,7 +54,7 @@ int main(int argc, char const *argv[])
   char *id;
   char *coordenada;
   bool boolean = true;
-
+  start = clock();
   //Faz a leitura da primeira linha
   qtdChar = getline(&buffer, &bufsize, inputFile);
 
@@ -111,16 +113,25 @@ int main(int argc, char const *argv[])
   // double pointsMatrix[n][n];
   double **pointsMatrix = initMatrix(n, n);
   fillMatrix(n, pointsMatrix, points, m);
-  printMatrix(logFile,n, pointsMatrix, m);
+  printMatrix(logFile, n, pointsMatrix, m);
 
+  // Edge *newEdge = createEdge(points[0], points[1], m);
+  // destroyEdge(newEdge, m);
+  //
+  // --------------------------DESTRUIÇÕES-----------------------
+  //destruindo o vetor de pontos
   for (unsigned int i = 0; i < n; i++)
   {
     destroyPoint(points[i]);
   }
 
+  //destruindo a matriz
   destroyMatrix(pointsMatrix, n, n);
   free(buffer);
   fclose(inputFile);
   fclose(logFile);
+  stop = clock();
+  double time_taken = ((double)stop - start) / CLOCKS_PER_SEC;
+  printf("\nTEMPO %.4f\n", time_taken);
   return 0;
 }
