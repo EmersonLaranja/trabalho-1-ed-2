@@ -13,6 +13,8 @@ struct edge
   double wt;
 };
 
+double returnWeigth(Edge *edge) { return edge->wt; }
+
 Edge *createEdge(Point *src, Point *dst, unsigned int tam)
 {
   Edge *newEdge = (Edge *)malloc(sizeof(Edge));
@@ -78,4 +80,21 @@ void destroyArrayEdges(Edge **arrayEdges, unsigned int n, unsigned int m)
   {
     destroyEdge(arrayEdges[i], m);
   }
+  free(arrayEdges);
 }
+
+static int compare(const void *a, const void *b)
+{
+
+  Edge *edgeA = (Edge *)a;
+  Edge *edgeB = (Edge *)b;
+  printEdge(edgeA, 10);
+  printEdge(edgeB, 10);
+
+  return (edgeB->wt - edgeA->wt);
+}
+
+void sortEdges(Edge **arrayEdges, unsigned int n)
+{
+  qsort(arrayEdges, (n * (n - 1)) / 2, sizeof(Edge), compare);
+};

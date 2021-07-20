@@ -109,22 +109,16 @@ int main(int argc, char const *argv[])
     qtdChar = getline(&buffer, &bufsize, inputFile);
   }
 
-  // Preencher Matriz de distancias
-  // double pointsMatrix[n][n];
-  double **pointsMatrix = initMatrix(n, n);
-  fillMatrix(n, pointsMatrix, points, m);
-  //printMatrix(logFile, n, pointsMatrix, m);
-
   Edge **arrayEdges = initArrayEdges(n);
   fillEdge(arrayEdges, n, points, m);
-  //printArrayEdges(arrayEdges, n, m);
+  // printArrayEdges(arrayEdges, n, m);
+
+  sortEdges(arrayEdges, n);
+  printf("\n\nTEORICAMENTE ORDENADO POR WEIGTH:\n");
+  // printArrayEdges(arrayEdges, n, m);
+  // --------------------------DESTRUIÇÕES-----------------------
   destroyArrayEdges(arrayEdges, n, m);
 
-  //Edge *newEdge = createEdge(points[0], points[1], m);
-  // printEdge(newEdge, m);
-  // destroyEdge(newEdge, m);
-  //
-  // --------------------------DESTRUIÇÕES-----------------------
   //destruindo o vetor de pontos
   for (unsigned int i = 0; i < n; i++)
   {
@@ -132,7 +126,7 @@ int main(int argc, char const *argv[])
   }
 
   //destruindo a matriz
-  destroyMatrix(pointsMatrix, n, n);
+  // destroyMatrix(pointsMatrix, n, n);
   free(buffer);
   fclose(inputFile);
   fclose(logFile);

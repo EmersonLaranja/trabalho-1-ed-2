@@ -17,6 +17,10 @@ void printEdge(Edge *edge, unsigned int m);
 
 void printArrayEdges(Edge **arrayEdges, unsigned int n, unsigned int m);
 
+double returnWeigth(Edge *edge);
+
 void destroyArrayEdges(Edge **arrayEdges, unsigned int n, unsigned int m);
+
+void sortEdges(Edge **arrayEdges, unsigned int n);
 
 #endif // EDGE_H
