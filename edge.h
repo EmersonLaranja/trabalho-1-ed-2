@@ -7,8 +7,16 @@ typedef struct edge Edge;
 
 Edge *createEdge(Point *src, Point *dst, unsigned int tam);
 
+Edge **initArrayEdges(unsigned int n);
+
+void fillEdge(Edge **arrayEdges, unsigned int n, Point **points, unsigned int m);
+
 void destroyEdge(Edge *edge, unsigned int tam);
 
 void printEdge(Edge *edge, unsigned int m);
+
+void printArrayEdges(Edge **arrayEdges, unsigned int n, unsigned int m);
+
+void destroyArrayEdges(Edge **arrayEdges, unsigned int n, unsigned int m);
 
 #endif // EDGE_H

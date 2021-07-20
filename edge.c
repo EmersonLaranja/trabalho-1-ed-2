@@ -21,7 +21,30 @@ Edge *createEdge(Point *src, Point *dst, unsigned int tam)
 
   newEdge->wt = distance(src, dst, tam);
 
-  printEdge(newEdge, tam);
+  return newEdge;
+}
+
+Edge **initArrayEdges(unsigned int n)
+{
+  int k = n * (n - 1) / 2;
+  Edge **arrayEdges = (Edge **)malloc(sizeof(Edge *) * k);
+
+  return arrayEdges;
+}
+
+void fillEdge(Edge **arrayEdges, unsigned int n, Point **points, unsigned int m)
+{
+  int k = 0;
+
+  for (unsigned int i = 0; i < (n - 1); i++)
+  {
+    for (unsigned int j = i + 1; j < n; j++)
+    {
+      arrayEdges[k] = createEdge(points[i], points[j], m);
+
+      k++;
+    }
+  }
 }
 
 void destroyEdge(Edge *edge, unsigned int tam)
@@ -39,4 +62,20 @@ void printEdge(Edge *edge, unsigned int m)
   printPoint(edge->src, m);
   printPoint(edge->dst, m);
   printf("%lf\n", edge->wt);
+}
+
+void printArrayEdges(Edge **arrayEdges, unsigned int n, unsigned int m)
+{
+  for (unsigned int i = 0; i < n * ((n - 1) / 2); i++)
+  {
+    printEdge(arrayEdges[i], m);
+  }
+}
+
+void destroyArrayEdges(Edge **arrayEdges, unsigned int n, unsigned int m)
+{
+  for (unsigned int i = 0; i < (n * (n - 1) / 2); i++)
+  {
+    destroyEdge(arrayEdges[i], m);
+  }
 }

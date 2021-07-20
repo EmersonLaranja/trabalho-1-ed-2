@@ -113,10 +113,15 @@ int main(int argc, char const *argv[])
   // double pointsMatrix[n][n];
   double **pointsMatrix = initMatrix(n, n);
   fillMatrix(n, pointsMatrix, points, m);
-  printMatrix(logFile, n, pointsMatrix, m);
+  //printMatrix(logFile, n, pointsMatrix, m);
 
-  Edge *newEdge = createEdge(points[0], points[1], m);
-  printEdge(newEdge, m);
+  Edge **arrayEdges = initArrayEdges(n);
+  fillEdge(arrayEdges, n, points, m);
+  //printArrayEdges(arrayEdges, n, m);
+  destroyArrayEdges(arrayEdges, n, m);
+
+  //Edge *newEdge = createEdge(points[0], points[1], m);
+  // printEdge(newEdge, m);
   // destroyEdge(newEdge, m);
   //
   // --------------------------DESTRUIÇÕES-----------------------
