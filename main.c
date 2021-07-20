@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include "matrix.h"
 #include <time.h>
-// #include "edge.h"
+#include "edge.h"
 
 int main(int argc, char const *argv[])
 {
@@ -115,7 +115,8 @@ int main(int argc, char const *argv[])
   fillMatrix(n, pointsMatrix, points, m);
   printMatrix(logFile, n, pointsMatrix, m);
 
-  // Edge *newEdge = createEdge(points[0], points[1], m);
+  Edge *newEdge = createEdge(points[0], points[1], m);
+  printEdge(newEdge, m);
   // destroyEdge(newEdge, m);
   //
   // --------------------------DESTRUIÇÕES-----------------------

@@ -1,15 +1,14 @@
 #if !defined(EDGE_H)
 #define EDGE_H
 
-#include "point.h"
-
 typedef struct node Node;
 typedef struct edge Edge;
+#include "point.h"
 
 Edge *createEdge(Point *src, Point *dst, unsigned int tam);
 
 void destroyEdge(Edge *edge, unsigned int tam);
 
-void print_edge(Edge *edge);
+void printEdge(Edge *edge, unsigned int m);
 
 #endif // EDGE_H
