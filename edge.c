@@ -61,8 +61,8 @@ void destroyEdge(Edge *edge, unsigned int tam)
 
 void printEdge(Edge *edge, unsigned int m)
 {
-  printPoint(edge->src, m);
-  printPoint(edge->dst, m);
+  // printPoint(edge->src, m);
+  // printPoint(edge->dst, m);
   printf("%lf\n", edge->wt);
 }
 
@@ -86,15 +86,12 @@ void destroyArrayEdges(Edge **arrayEdges, unsigned int n, unsigned int m)
 static int compare(const void *a, const void *b)
 {
 
-  Edge *edgeA = (Edge *)a;
-  Edge *edgeB = (Edge *)b;
-  printEdge(edgeA, 10);
-  printEdge(edgeB, 10);
-
-  return (edgeB->wt - edgeA->wt);
+  Edge *edgeA = *(Edge **)a;
+  Edge *edgeB = *(Edge **)b;
+  return (edgeA->wt > edgeB->wt);
 }
 
 void sortEdges(Edge **arrayEdges, unsigned int n)
 {
-  qsort(arrayEdges, (n * (n - 1)) / 2, sizeof(Edge), compare);
+  qsort(arrayEdges, (n * (n - 1)) / 2, sizeof(Edge *), compare);
 };

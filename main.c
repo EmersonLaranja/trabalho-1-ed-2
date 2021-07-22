@@ -6,7 +6,7 @@
 
 int main(int argc, char const *argv[])
 {
-  clock_t start, stop;
+  clock_t start, stop; //variaveis para medição do tempo
   char *buffer = NULL;
   size_t bufsize = 0;
   ssize_t qtdChar = 0;
@@ -113,9 +113,10 @@ int main(int argc, char const *argv[])
   fillEdge(arrayEdges, n, points, m);
   // printArrayEdges(arrayEdges, n, m);
 
-  sortEdges(arrayEdges, n);
-  printf("\n\nTEORICAMENTE ORDENADO POR WEIGTH:\n");
+  sortEdges(arrayEdges, n); //ordenando pela distancia entre os pontos src e dst
+  // printf("\n\nTEORICAMENTE ORDENADO POR WEIGTH:\n");
   // printArrayEdges(arrayEdges, n, m);
+
   // --------------------------DESTRUIÇÕES-----------------------
   destroyArrayEdges(arrayEdges, n, m);
 
