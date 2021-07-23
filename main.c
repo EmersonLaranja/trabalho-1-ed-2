@@ -3,6 +3,7 @@
 #include "matrix.h"
 #include <time.h>
 #include "edge.h"
+#include "UF.h"
 
 int main(int argc, char const *argv[])
 {
@@ -111,11 +112,42 @@ int main(int argc, char const *argv[])
 
   Edge **arrayEdges = initArrayEdges(n);
   fillEdge(arrayEdges, n, points, m);
-  // printArrayEdges(arrayEdges, n, m);
+  //printArrayEdges(arrayEdges, n, m);
 
   sortEdges(arrayEdges, n); //ordenando pela distancia entre os pontos src e dst
-  // printf("\n\nTEORICAMENTE ORDENADO POR WEIGTH:\n");
-  // printArrayEdges(arrayEdges, n, m);
+  //printf("\n\nTEORICAMENTE ORDENADO POR WEIGTH:\n");
+  ///printArrayEdges(arrayEdges, n, m);
+
+  Subset *subsetsArray=createSubset(n);
+
+  int counter=0, flag=0;
+  Edge* result[n]; // os Edges restantes para nossa MST
+
+  while(counter<n-1){
+    Edge nextEdge = arrayEdges[counter++];
+
+    int x= find(subsetsArray, nextEdge->src);
+    int y= find(subsetsArray, nextEdge->dest);
+
+    if(x != y){
+      result[flag++] = nextEdge;
+      Union(subsetsArray, x, y);
+    }
+
+  }
+
+  //PRINTANDO ARVORE
+  printf(
+        "Aqui estão as edges na MST\n");
+    int minimumCost = 0;
+    for (i = 0; i < counter; ++i)
+    {
+        printf("%d -- %d == %d\n", result[i].src,
+            result[i].dest, result[i].weight);
+        minimumCost += result[i].weight;
+    }
+    printf("Minimum Cost Spanning tree : %d", minimumCost);
+
 
   // --------------------------DESTRUIÇÕES-----------------------
   destroyArrayEdges(arrayEdges, n, m);
