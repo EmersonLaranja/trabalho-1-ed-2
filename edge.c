@@ -95,3 +95,13 @@ void sortEdges(Edge **arrayEdges, unsigned int n)
 {
   qsort(arrayEdges, (n * (n - 1)) / 2, sizeof(Edge *), compare);
 };
+
+
+Point* returnSrc(Edge *edge){
+  return edge->src;
+}
+
+
+Point* returnDst(Edge *edge){
+  return edge->dst;
+}

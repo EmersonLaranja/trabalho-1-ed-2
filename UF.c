@@ -1,16 +1,15 @@
 #include "UF.h"
-#include <string.h>
 // A structure to represent a subset for union-find
 struct subset {
     //mudamos o parent para string já que vamos usar o id, mas era int
-    char *parent;
+    int parent;
     int rank;
 };
  
 Subset* createSubset(int qntVertices){
     Subset *newSubset=(Subset*)malloc(qntVertices * sizeof(Subset));
         for (int v = 0; v < qntVertices; ++v) {
-        newSubset[v].parent = -1;
+        newSubset[v].parent = v;
         newSubset[v].rank = 0;
     }
     return newSubset;
@@ -19,12 +18,11 @@ Subset* createSubset(int qntVertices){
 
 // A utility function to find set of an element i
 // (uses path compression technique)
-int find(struct subset subsets[], char* i)
+int find(Subset subsets[], int i)
 {
     // find root and make root as parent of i
     // (path compression)
-    if (!strcmp(subsets[i].parent,i))
-    //aqui vai dar ERRO já que i é string
+    if (subsets[i].parent != i)
         subsets[i].parent= find(subsets, subsets[i].parent);
  
     return subsets[i].parent;
@@ -32,7 +30,7 @@ int find(struct subset subsets[], char* i)
  
 // A function that does union of two sets of x and y
 // (uses union by rank)
-void Union(struct subset subsets[], int x, int y)
+void Union(Subset subsets[], int x, int y)
 {
     int xroot = find(subsets, x);
     int yroot = find(subsets, y);
@@ -51,4 +49,13 @@ void Union(struct subset subsets[], int x, int y)
         subsets[yroot].parent = xroot;
         subsets[xroot].rank++;
     }
+}
+
+
+void destroySubset(Subset *subset){
+    free(subset);
+}
+
+int returnParent (Subset *subsets){
+    return subsets->parent;
 }

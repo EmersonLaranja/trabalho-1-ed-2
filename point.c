@@ -4,10 +4,11 @@
 
 struct point{
     char* id;
+    unsigned int idNum;
     double *coordArray;
 };
 
-Point* initPoint(Point* point, char* id, double *coordArray, unsigned int m){
+Point* initPoint(Point* point, char* id, double *coordArray, unsigned int m, unsigned int countPoints){
     Point *newPoint = (Point*)malloc(sizeof(Point));
     newPoint->id=strdup(id);
     newPoint->coordArray = (double*)malloc(sizeof(double)*m);
@@ -15,6 +16,7 @@ Point* initPoint(Point* point, char* id, double *coordArray, unsigned int m){
     {
       newPoint->coordArray[i] = coordArray[i];
     }
+    newPoint->idNum = countPoints;
     return newPoint;
 }
 
@@ -27,6 +29,10 @@ void printPoint(Point* point, unsigned int m){
       printf("%.15lf ", point->coordArray[i]);
     }
 printf("\n");
+}
+
+unsigned int returnIdNum(Point* point){
+  return point->idNum;
 }
 
 

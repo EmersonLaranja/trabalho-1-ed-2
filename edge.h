@@ -23,4 +23,8 @@ void destroyArrayEdges(Edge **arrayEdges, unsigned int n, unsigned int m);
 
 void sortEdges(Edge **arrayEdges, unsigned int n);
 
+Point* returnSrc(Edge *edge);
+
+Point* returnDst(Edge *edge);
+
 #endif // EDGE_H

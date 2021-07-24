@@ -5,6 +5,7 @@
 #include "edge.h"
 #include "UF.h"
 
+
 int main(int argc, char const *argv[])
 {
   clock_t start, stop; //variaveis para medição do tempo
@@ -103,7 +104,7 @@ int main(int argc, char const *argv[])
     }
 
     //Cria a Struct do Ponto;
-    Point *point = initPoint(point, id, vetorCoordenadas, m);
+    Point *point = initPoint(point, id, vetorCoordenadas, m, countPoints);
     points[countPoints] = point;
     countPoints++;
 
@@ -123,31 +124,35 @@ int main(int argc, char const *argv[])
   int counter=0, flag=0;
   Edge* result[n]; // os Edges restantes para nossa MST
 
-  while(counter<n-1){
-    Edge nextEdge = arrayEdges[counter++];
+  while(counter<(n*(n-1)/2)){
+    Edge *nextEdge = arrayEdges[counter];
 
-    int x= find(subsetsArray, nextEdge->src);
-    int y= find(subsetsArray, nextEdge->dest);
+    int x= find(subsetsArray, returnIdNum(returnSrc(nextEdge)));
+    int y= find(subsetsArray, returnIdNum(returnDst(nextEdge)));
 
     if(x != y){
-      result[flag++] = nextEdge;
+      result[flag] = nextEdge;
+      flag++;
       Union(subsetsArray, x, y);
     }
 
+    counter++;
   }
 
   //PRINTANDO ARVORE
-  printf(
-        "Aqui estão as edges na MST\n");
-    int minimumCost = 0;
-    for (i = 0; i < counter; ++i)
-    {
-        printf("%d -- %d == %d\n", result[i].src,
-            result[i].dest, result[i].weight);
-        minimumCost += result[i].weight;
-    }
-    printf("Minimum Cost Spanning tree : %d", minimumCost);
+//printf(
+  //    "Aqui estão as edges na MST\n");
+  // int minimumCost = 0;
+  // for (unsigned int i = 0; i < flag-(k-1); ++i)
+  // {
+  //      printf("%c -- %c == %lf\n", 65+returnIdNum(returnSrc(result[i])), 65+returnIdNum(returnDst(result[i])), returnWeigth(result[i]));
+   //    minimumCost += returnWeigth(result[i]);
+   // }
+   // printf("Minimum Cost Spanning tree : %d", minimumCost);
 
+  for(unsigned int i; i < n; i++){
+    printf("%c PAI: %c\n", 65+i, 65+(returnParent(subsetsArray[i])));
+  }
 
   // --------------------------DESTRUIÇÕES-----------------------
   destroyArrayEdges(arrayEdges, n, m);
@@ -157,7 +162,7 @@ int main(int argc, char const *argv[])
   {
     destroyPoint(points[i]);
   }
-
+  destroySubset(subsetsArray);
   //destruindo a matriz
   // destroyMatrix(pointsMatrix, n, n);
   free(buffer);
