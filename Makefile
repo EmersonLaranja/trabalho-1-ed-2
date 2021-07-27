@@ -5,4 +5,4 @@ compile:
 run:
 	./main in-exemplos/entrada.txt 3 saida.txt
 valgrind:
-	valgrind ./main henrique/in/2.txt 4 saida.txt -s
+	valgrind ./main henrique/in/3.txt 5 saida.txt -s

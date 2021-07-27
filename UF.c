@@ -94,8 +94,6 @@ void printSameFather(FILE *file, Subset **subsets, Point **points, int qtd)
     //     if (counter == qtd)
     //         return;
     // }
-    int ant = 0;
-    int atual = 0;
     int count = 0;
     for (int i = 0; i < qtd; i++)
     {
