@@ -122,7 +122,8 @@ int main(int argc, char const *argv[])
 
   for (int i = 0; i < n; i++)
   {
-    printf("%d %s \n", returnIdNum(points[i]), returnId(points[i]));
+    printPoint(points[i], m);
+    printf("\n");
   }
 
   Edge **arrayEdges = initArrayEdges(n);
