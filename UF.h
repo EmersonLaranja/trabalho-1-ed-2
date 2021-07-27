@@ -7,16 +7,16 @@
 
 typedef struct subset Subset;
 
-Subset** createSubset(int qntVertices);
+Subset **createSubset(int qntVertices);
 
 int find(Subset **subsets, int i);
 
 void Union(Subset **subsets, int x, int y);
 
-int returnParent (Subset *subsets);
+int returnParent(Subset *subsets);
 
-//Subset returnSubset(Subset *subsetArray, int id)
+void printSameFather(FILE *file, Subset **subsets, Point **points, int qtd);
 
-void destroySubset(Subset **subset);
+void destroySubset(Subset **subset, int qntVertices);
 
 #endif // UF_H

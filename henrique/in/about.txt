@@ -1,0 +1,11 @@
+Informações úteis para testes e debug
+Lembre que os valores de m e n não são fornecidos na entrada.
+1: n = 50; k = 2; m = 2
+2: n = 100; k = 4; m = 3
+3: n = 1000; k = 5; m = 2
+4: n = 2500; k = 5; m = 5
+5: n = 5000; k = 10; m = 10
+6: n = 10; k = 3; m = 2
+7: n = 10; k = 3; m = 2
+8: n = 5000; k = 10; m = 5
+9: n = 10000; k = 42; m = 5

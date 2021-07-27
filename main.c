@@ -5,6 +5,7 @@
 #include "edge.h"
 #include "UF.h"
 
+int comparePoints(const void *a, const void *b);
 
 int main(int argc, char const *argv[])
 {
@@ -104,11 +105,24 @@ int main(int argc, char const *argv[])
     }
 
     //Cria a Struct do Ponto;
-    Point *point = initPoint(point, id, vetorCoordenadas, m, countPoints);
+    Point *point = initPoint(point, id, vetorCoordenadas, m);
     points[countPoints] = point;
     countPoints++;
 
     qtdChar = getline(&buffer, &bufsize, inputFile);
+  }
+
+  //ORDENANDO PONTOS LEXICOGRÁFICAMENTE
+  qsort(points, n, sizeof(Point *), comparePoints);
+
+  for (int i = 0; i < n; i++)
+  {
+    fillIdNum(points[i], i);
+  }
+
+  for (int i = 0; i < n; i++)
+  {
+    printf("%d %s \n", returnIdNum(points[i]), returnId(points[i]));
   }
 
   Edge **arrayEdges = initArrayEdges(n);
@@ -119,25 +133,21 @@ int main(int argc, char const *argv[])
   //printf("\n\nTEORICAMENTE ORDENADO POR WEIGTH:\n");
   ///printArrayEdges(arrayEdges, n, m);
 
-  Subset **subsetsArray=createSubset(n);
+  Subset **subsetsArray = createSubset(n);
 
-  int counter=0, flag=0;
-  Edge* result[n-k-1]; // os Edges restantes para nossa MST
+  int counter = 0, flag = 0;
+  Edge *result[n - k]; // os Edges restantes para nossa MST
 
-  //A B C D E F G H
-  // find(A)==find(B)? 
-  // A - D ? SIM! 
-  // C - D ? 
-  // C - E
- 
   //while(counter<((n*(n-1)/2) - (k-1))){
-  while(flag < n-k-1){
+  while (flag < n - k)
+  {
     Edge *nextEdge = arrayEdges[counter];
 
-    int x= find(subsetsArray, returnIdNum(returnSrc(nextEdge)));
-    int y= find(subsetsArray, returnIdNum(returnDst(nextEdge)));
+    int x = find(subsetsArray, returnIdNum(returnSrc(nextEdge)));
+    int y = find(subsetsArray, returnIdNum(returnDst(nextEdge)));
 
-    if(x != y){
+    if (x != y)
+    {
       result[flag] = nextEdge;
       flag++;
       Union(subsetsArray, x, y);
@@ -145,41 +155,26 @@ int main(int argc, char const *argv[])
 
     counter++;
   }
-  /* 
-  result e ordena lexicográficamente
-for de for verificando com find se tem o mesmo pai
-primeiro imprime i
-verifica i==j
-  se for, imprime j
-  
-  */
 
   //PRINTANDO ARVORE
-printf("Aqui estão as edges na MST\n");
+  printf("Aqui estão as edges na MST\n");
   int minimumCost = 0;
   for (unsigned int i = 0; i < flag; ++i)
   {
-       printf("%c -- %c == %lf\n", 65+returnIdNum(returnSrc(result[i])), 65+returnIdNum(returnDst(result[i])), returnWeigth(result[i]));
-      minimumCost += returnWeigth(result[i]);
+    printf("%s -- %s == %lf\n", returnId(returnSrc(result[i])), returnId(returnDst(result[i])), returnWeigth(result[i]));
+    minimumCost += returnWeigth(result[i]);
   }
-  printf("Minimum Cost Spanning tree : %d", minimumCost);
+  printf("Minimum Cost Spanning tree : %d\n", minimumCost);
 
-  
-  for(unsigned int i; i < n; i++){
-    // Subset sub = subsetsArray[i];
-    // Subset *sub2 = &sub;
-    printf("%c PAI: %c\n", 65+i, 65+(returnParent(subsetsArray[i])));
-  }
+  //VER O PAI!!!
+  // for (unsigned int i = 0; i < n; i++)
+  // {
+  //   printf("%c PAI: %c\n", 65 + i, 65 + (returnParent(subsetsArray[i])));
+  // }
 
-// for(int i=0;i<n;i++){
-//   //printPoint(points[i],i);
-//   for(int j=0;j<n;j++){
-//     if(find(subsetsArray,i)==find(subsetsArray,j)){
-//         printPoint(points[j],j);
-//     }
-//   }
-//   printf("\n");
-// }
+  counter = 0;
+
+  printSameFather(logFile, subsetsArray, points, n);
 
   // --------------------------DESTRUIÇÕES-----------------------
   destroyArrayEdges(arrayEdges, n, m);
@@ -189,7 +184,7 @@ printf("Aqui estão as edges na MST\n");
   {
     destroyPoint(points[i]);
   }
-  destroySubset(subsetsArray);
+  destroySubset(subsetsArray, n);
   //destruindo a matriz
   // destroyMatrix(pointsMatrix, n, n);
   free(buffer);
@@ -199,4 +194,12 @@ printf("Aqui estão as edges na MST\n");
   double time_taken = ((double)stop - start) / CLOCKS_PER_SEC;
   printf("\nTEMPO %.4f\n", time_taken);
   return 0;
+}
+
+int comparePoints(const void *a, const void *b)
+{
+  Point *x = *(Point **)a;
+  Point *y = *(Point **)b;
+
+  return strcmp(returnId(x), returnId(y));
 }

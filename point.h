@@ -6,13 +6,18 @@
 #include <string.h>
 typedef struct point Point;
 
-Point* initPoint(Point* point, char* id, double *coordArray, unsigned int m, unsigned int countPoints);
+Point *initPoint(Point *point, char *id, double *coordArray, unsigned int m);
 
-void printPoint(Point* point, unsigned int m);
+void fillIdNum(Point *point, int i);
+
+void printPoint(Point *point, unsigned int m);
+
 double distance(Point *x, Point *y, unsigned int m);
 
-unsigned int returnIdNum(Point* point);
+unsigned int returnIdNum(Point *point);
 
-Point* destroyPoint(Point* point);
+char *returnId(Point *point);
+
+Point *destroyPoint(Point *point);
 
 #endif // POINT_H
