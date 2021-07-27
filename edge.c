@@ -1,11 +1,5 @@
 #include "edge.h"
 
-struct node
-{
-  int parent;
-  int rank;
-};
-
 struct edge
 {
   Point *src;

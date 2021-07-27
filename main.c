@@ -119,12 +119,19 @@ int main(int argc, char const *argv[])
   //printf("\n\nTEORICAMENTE ORDENADO POR WEIGTH:\n");
   ///printArrayEdges(arrayEdges, n, m);
 
-  Subset *subsetsArray=createSubset(n);
+  Subset **subsetsArray=createSubset(n);
 
   int counter=0, flag=0;
-  Edge* result[n]; // os Edges restantes para nossa MST
+  Edge* result[n-k-1]; // os Edges restantes para nossa MST
 
-  while(counter<(n*(n-1)/2)){
+  //A B C D E F G H
+  // find(A)==find(B)? 
+  // A - D ? SIM! 
+  // C - D ? 
+  // C - E
+ 
+  //while(counter<((n*(n-1)/2) - (k-1))){
+  while(flag < n-k-1){
     Edge *nextEdge = arrayEdges[counter];
 
     int x= find(subsetsArray, returnIdNum(returnSrc(nextEdge)));
@@ -138,21 +145,41 @@ int main(int argc, char const *argv[])
 
     counter++;
   }
+  /* 
+  result e ordena lexicográficamente
+for de for verificando com find se tem o mesmo pai
+primeiro imprime i
+verifica i==j
+  se for, imprime j
+  
+  */
 
   //PRINTANDO ARVORE
-//printf(
-  //    "Aqui estão as edges na MST\n");
-  // int minimumCost = 0;
-  // for (unsigned int i = 0; i < flag-(k-1); ++i)
-  // {
-  //      printf("%c -- %c == %lf\n", 65+returnIdNum(returnSrc(result[i])), 65+returnIdNum(returnDst(result[i])), returnWeigth(result[i]));
-   //    minimumCost += returnWeigth(result[i]);
-   // }
-   // printf("Minimum Cost Spanning tree : %d", minimumCost);
+printf("Aqui estão as edges na MST\n");
+  int minimumCost = 0;
+  for (unsigned int i = 0; i < flag; ++i)
+  {
+       printf("%c -- %c == %lf\n", 65+returnIdNum(returnSrc(result[i])), 65+returnIdNum(returnDst(result[i])), returnWeigth(result[i]));
+      minimumCost += returnWeigth(result[i]);
+  }
+  printf("Minimum Cost Spanning tree : %d", minimumCost);
 
+  
   for(unsigned int i; i < n; i++){
+    // Subset sub = subsetsArray[i];
+    // Subset *sub2 = &sub;
     printf("%c PAI: %c\n", 65+i, 65+(returnParent(subsetsArray[i])));
   }
+
+// for(int i=0;i<n;i++){
+//   //printPoint(points[i],i);
+//   for(int j=0;j<n;j++){
+//     if(find(subsetsArray,i)==find(subsetsArray,j)){
+//         printPoint(points[j],j);
+//     }
+//   }
+//   printf("\n");
+// }
 
   // --------------------------DESTRUIÇÕES-----------------------
   destroyArrayEdges(arrayEdges, n, m);
