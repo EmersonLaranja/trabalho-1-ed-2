@@ -120,11 +120,11 @@ int main(int argc, char const *argv[])
     fillIdNum(points[i], i);
   }
 
-  for (int i = 0; i < n; i++)
-  {
-    printPoint(points[i], m);
-    printf("\n");
-  }
+  // for (int i = 0; i < n; i++)
+  // {
+  //   printPoint(points[i], m);
+  //   printf("\n");
+  // }
 
   Edge **arrayEdges = initArrayEdges(n);
   fillEdge(arrayEdges, n, points, m);
@@ -158,14 +158,14 @@ int main(int argc, char const *argv[])
   }
 
   //PRINTANDO ARVORE
-  printf("Aqui estão as edges na MST\n");
-  int minimumCost = 0;
-  for (unsigned int i = 0; i < flag; ++i)
-  {
-    printf("%s -- %s == %lf\n", returnId(returnSrc(result[i])), returnId(returnDst(result[i])), returnWeigth(result[i]));
-    minimumCost += returnWeigth(result[i]);
-  }
-  printf("Minimum Cost Spanning tree : %d\n", minimumCost);
+  // printf("Aqui estão as edges na MST\n");
+  // int minimumCost = 0;
+  // for (unsigned int i = 0; i < flag; ++i)
+  // {
+  //   printf("%s -- %s == %lf\n", returnId(returnSrc(result[i])), returnId(returnDst(result[i])), returnWeigth(result[i]));
+  //   minimumCost += returnWeigth(result[i]);
+  // }
+  // printf("Minimum Cost Spanning tree : %d\n", minimumCost);
 
   //VER O PAI!!!
   // for (unsigned int i = 0; i < n; i++)
@@ -175,7 +175,7 @@ int main(int argc, char const *argv[])
 
   counter = 0;
 
-  printSameFather(logFile, subsetsArray, points, n);
+  printSameFather(logFile, subsetsArray, points, n, k);
 
   // --------------------------DESTRUIÇÕES-----------------------
   destroyArrayEdges(arrayEdges, n, m);

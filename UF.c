@@ -68,40 +68,63 @@ static int counterGroupItem(int i, int qtd, Subset **subsets)
     int counter = 0;
     for (int k = 0; k < qtd; k++)
     {
-        if (i == subsets[k]->parent)
+        if (subsets[i]->parent == subsets[k]->parent)
             counter++;
     }
     return counter;
 }
 
-void printSameFather(FILE *file, Subset **subsets, Point **points, int qtd)
+static void initParentArray(int k, int *parentArray)
+{
+    for (unsigned int i = 0; i < k; i++)
+    {
+        parentArray[i] = -1;
+    }
+}
+
+static int verifyParent(int parent, int *parentArray, int k)
+{
+    for (unsigned int i = 0; i < k; i++)
+    {
+        if (parentArray[i] == parent)
+        {
+            return 1;
+        }
+        else if (parentArray[i] == -1)
+        {
+            return 0;
+        }
+    }
+
+    return 0;
+}
+
+void printSameFather(FILE *file, Subset **subsets, Point **points, int qtd, int k)
 {
 
-    // int counter = 0;
-    // for (int i = 0; i < qtd; i++)
-    // {
-    //     fprintf(file, "%s,", returnId(points[i]));
-    //     counter++;
-    //     for (int j = i + 1; j < qtd; j++)
-    //     {
-    //         if (find(subsets, i) == find(subsets, j))
-    //         {
-    //             fprintf(file, "%s,", returnId(points[j]));
-    //             counter++;
-    //         }
-    //     }
-    //     fprintf(file, "\n");
-    //     if (counter == qtd)
-    //         return;
-    // }
+    int parentArray[k];
+    initParentArray(k, parentArray);
     int count = 0;
+    int flag = 0;
     for (int i = 0; i < qtd; i++)
     {
-        count = counterGroupItem(i, qtd, subsets);
-
-        for (int j = 0; j < qtd; j++)
+        if (verifyParent(returnParent(subsets[i]), parentArray, k))
         {
-            if (subsets[j]->parent == i)
+            continue;
+        }
+        count = counterGroupItem(i, qtd, subsets);
+        fprintf(file, "%s", returnId(points[i]));
+        count--;
+
+        if (count != 0)
+        {
+            fprintf(file, ",");
+        }
+
+        for (int j = i + 1; j < qtd; j++)
+        {
+
+            if (subsets[j]->parent == subsets[i]->parent)
             {
                 fprintf(file, "%s", returnId(points[j]));
                 count--;
@@ -111,10 +134,9 @@ void printSameFather(FILE *file, Subset **subsets, Point **points, int qtd)
                 }
             }
         }
-        if (subsets[i]->parent == i)
-        {
-            fprintf(file, "\n");
-        }
+        parentArray[flag] = subsets[i]->parent;
+        flag++;
+        fprintf(file, "\n");
     }
 }
 

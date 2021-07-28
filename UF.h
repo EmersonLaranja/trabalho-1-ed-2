@@ -15,7 +15,7 @@ void Union(Subset **subsets, int x, int y);
 
 int returnParent(Subset *subsets);
 
-void printSameFather(FILE *file, Subset **subsets, Point **points, int qtd);
+void printSameFather(FILE *file, Subset **subsets, Point **points, int qtd, int k);
 
 void destroySubset(Subset **subset, int qntVertices);
 
