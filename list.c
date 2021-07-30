@@ -89,32 +89,42 @@ Point *returnFirst(List *list)
 
 void createGroupList(List **groupsList, Subset **subsetsArray, Point **pointsArray, int qtdGroups, int qtdPoints)
 {
-  int lengGroup = 0;
+  int lengGroup = 0, posi;
   for (int i = 0; i < qtdGroups; i++)
   {
     groupsList[i] = initList();
   }
+  int flag;
 
-  int c;
   for (int i = 0, posi = 0; i < qtdPoints; i++)
   {
-    c = 0;
+    flag = 0;
     for (int j = 0; j < qtdPoints; j++)
     {
-      if (returnParent(subsetsArray[j]) == i && returnParent(subsetsArray[i]) == i)
+      if (returnParent(subsetsArray[j]) == i)
       {
         insertList(groupsList[posi], pointsArray[j]);
-        c = 1;
+
+        flag = 1;
       }
-      else if (returnParent(subsetsArray[j]) == i && !returnParent(subsetsArray[i]) == i)
-      {
-            }
     }
-    if (c)
+    if (flag)
     {
       posi++;
     }
   }
+}
+
+void sortLists(List **groupsList, int qtdGruops)
+{
+  qsort(groupsList, qtdGruops, sizeof(List *), compareLists);
+}
+
+int compareLists(const void *a, const void *b)
+{
+  List *x = *(List **)a;
+  List *y = *(List **)b;
+  return strcmp(returnId(returnFirst(x)), returnId(returnFirst(y)));
 }
 
 void destroyGroupList(List **groupsList, int qtdGroups)
@@ -123,11 +133,4 @@ void destroyGroupList(List **groupsList, int qtdGroups)
   {
     destroyList(groupsList[i]);
   }
-}
-
-int compareLists(const void *a, const void *b)
-{
-  List *x = *(List **)a;
-  List *y = *(List **)b;
-  return strcmp(returnId(returnFirst(x)), returnId(returnFirst(y)));
 }

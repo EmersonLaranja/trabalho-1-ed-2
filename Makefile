@@ -3,13 +3,19 @@ compile:
 	gcc *.c -o main -lm
 
 run1:
-	./main in-exemplos/1.txt 2 saida.txt
+	valgrind ./main in-exemplos/1.txt 2 saida.txt
+
+run2:
+	valgrind ./main in-exemplos/2.txt 4 saida.txt
 
 run3:
-	./main in-exemplos/3.txt 5 saida.txt
+	valgrind ./main in-exemplos/3.txt 5 saida.txt
+
+run4:
+	valgrind ./main in-exemplos/4.txt 5 saida.txt
 	
 run5:
-	./main in-exemplos/5.txt 10 saida.txt
+	valgrind ./main in-exemplos/5.txt 10 saida.txt
 
 valgrind:
 	valgrind ./main in-exemplos/entrada.txt 3 saida.txt --leak-check=full
@@ -34,10 +40,10 @@ valgrind6:
 	./main henrique/in/6.txt 3 saida.txt --leak-check=full
 
 valgrind7:
-	./main henrique/in/7.txt 3 saida.txt --leak-check=full
+	valgrind ./main henrique/in/7.txt 3 saida.txt --leak-check=full
 
 valgrind8:
-	./main henrique/in/8.txt 10 saida.txt --leak-check=full -s
+	valgrind ./main henrique/in/8.txt 10 saida.txt --leak-check=full -s
 
 valgrind9:
 	./main henrique/in/9.txt 42 saida.txt --leak-check=full
@@ -57,6 +63,6 @@ diff6:
 diff7:
 	diff saida.txt henrique/out_nosso/saida7.txt
 diff8:
-	diff saida.txt henrique/out_nosso/saida8.txt > test.txt
+	diff saida.txt henrique/out_nosso/saida8.txt 
 diff9:
 	diff saida.txt henrique/out_nosso/saida9.txt 

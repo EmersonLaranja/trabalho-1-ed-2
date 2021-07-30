@@ -11,16 +11,14 @@ Subset **createSubset(int qntVertices);
 
 int find(Subset **subsets, int key);
 
-void Union(Subset **subsets, int x, int y);
+void Union(Subset **subsets, int parentSrc, int parentDst);
 
 int returnParent(Subset *subsets);
 
-void destroySubset(Subset **subset, int qntVertices);
-
-int counterGroupItem(int i, int qtd, Subset **subsets);
-
-void kruskal(Edge **result, Subset **subsetsArray, Edge **arrayEdges, int maxSizeResult);
+void kruskal(Edge **result, Subset **subsetsArray, Edge **arrayEdges, int maxSizeResult, int qtdElements);
 
 void changeParent(Subset **subsetsArray, int pos, int value);
+
+void destroySubset(Subset **subset, int qntVertices);
 
 #endif // UF_H

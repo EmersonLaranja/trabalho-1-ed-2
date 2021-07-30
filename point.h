@@ -8,17 +8,19 @@ typedef struct point Point;
 
 void initPointArray(Point **pointsArray, FILE *file, int length);
 
-Point *initPoint(Point *point, char *id, double *coordArray, unsigned int m);
+Point *initPoint(Point *point, char *id, double *coordArray, unsigned int qtdCoord);
 
 void fillIdNum(Point **pointArray, int length);
 
 void printPoint(Point *point);
 
-double distance(Point *x, Point *y, unsigned int m);
+double distance(Point *x, Point *y, unsigned int qtdCoord);
 
 unsigned int returnIdNum(Point *point);
 
 char *returnId(Point *point);
+
+void sortPoints(Point **pointsArray, int qtdPoints);
 
 void destroyPoint(Point *point);
 

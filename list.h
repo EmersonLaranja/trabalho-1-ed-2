@@ -2,7 +2,7 @@
 #define LIST_H
 
 #include <stdio.h>
-#include "UF.h"
+#include "uf.h"
 
 typedef struct list List;
 
@@ -13,7 +13,8 @@ void insertList(List *list, Point *point);
 Point *returnFirst(List *list);
 void printList(List *list, FILE *f);
 void destroyGroupList(List **groupsList, int qtdGroups);
-void destroyList(List *list);
+void sortLists(List **groupsList, int qtdGruops);
 int compareLists(const void *a, const void *b);
+void destroyList(List *list);
 
 #endif /* LIST_H */

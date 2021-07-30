@@ -48,16 +48,16 @@ void initPointArray(Point **arrayPoints, FILE *file, int length)
   free(buffer);
 };
 
-Point *initPoint(Point *point, char *id, double *coordArray, unsigned int m)
+Point *initPoint(Point *point, char *id, double *coordArray, unsigned int qtdCoord)
 {
   Point *newPoint = (Point *)malloc(sizeof(Point));
   newPoint->id = strdup(id);
-  newPoint->coordArray = (double *)malloc(sizeof(double) * m);
-  for (unsigned int i = 0; i < m; i++)
+  newPoint->coordArray = (double *)malloc(sizeof(double) * qtdCoord);
+  for (unsigned int i = 0; i < qtdCoord; i++)
   {
     newPoint->coordArray[i] = coordArray[i];
   }
-  newPoint->idNum = -1;
+  newPoint->idNum = -1; //posteriormente atribuiremos esse valor a uma posicao de subset
   return newPoint;
 }
 
@@ -92,19 +92,18 @@ void destroyPointsArray(Point **pointsArray, int length)
     destroyPoint(pointsArray[i]);
   }
 }
-
-void destroyPoint(Point *point)
+int comparePoints(const void *a, const void *b)
 {
-  free(point->coordArray);
-  free(point->id);
+  Point *x = *(Point **)a;
+  Point *y = *(Point **)b;
 
-  free(point);
+  return strcmp(returnId(x), returnId(y));
 }
 
-double distance(Point *x, Point *y, unsigned int m)
+double distance(Point *x, Point *y, unsigned int qtdCoord)
 {
   double sum = 0.0;
-  for (unsigned int i = 0; i < m; i++)
+  for (unsigned int i = 0; i < qtdCoord; i++)
   {
     sum += (y->coordArray[i] - x->coordArray[i]) * (y->coordArray[i] - x->coordArray[i]);
   }
@@ -112,10 +111,15 @@ double distance(Point *x, Point *y, unsigned int m)
   return sqrt(sum);
 }
 
-int comparePoints(const void *a, const void *b)
+void sortPoints(Point **pointsArray, int qtdPoints)
 {
-  Point *x = *(Point **)a;
-  Point *y = *(Point **)b;
+  qsort(pointsArray, qtdPoints, sizeof(Point *), comparePoints);
+}
 
-  return strcmp(returnId(x), returnId(y));
+void destroyPoint(Point *point)
+{
+  free(point->coordArray);
+  free(point->id);
+
+  free(point);
 }
