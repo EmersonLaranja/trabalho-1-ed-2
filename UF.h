@@ -3,20 +3,24 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "point.h"
+#include "edge.h"
 
 typedef struct subset Subset;
 
 Subset **createSubset(int qntVertices);
 
-int find(Subset **subsets, int i);
+int find(Subset **subsets, int key);
 
 void Union(Subset **subsets, int x, int y);
 
 int returnParent(Subset *subsets);
 
-void printSameFather(FILE *file, Subset **subsets, Point **points, int qtd, int k);
-
 void destroySubset(Subset **subset, int qntVertices);
+
+int counterGroupItem(int i, int qtd, Subset **subsets);
+
+void kruskal(Edge **result, Subset **subsetsArray, Edge **arrayEdges, int maxSizeResult);
+
+void changeParent(Subset **subsetsArray, int pos, int value);
 
 #endif // UF_H

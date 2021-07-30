@@ -1,5 +1,5 @@
 #include "UF.h"
-// A structure to represent a subset for union-find
+#include "edge.h"
 struct subset
 {
     int parent;
@@ -8,49 +8,39 @@ struct subset
 
 Subset **createSubset(int qntVertices)
 {
-    Subset **newSubset = (Subset **)malloc(qntVertices * sizeof(Subset *));
+    Subset **new = (Subset **)malloc(qntVertices * sizeof(Subset *));
 
     for (int v = 0; v < qntVertices; ++v)
     {
-        newSubset[v] = (Subset *)malloc(sizeof(Subset));
-        newSubset[v]->parent = v;
-        newSubset[v]->rank = 0;
+        new[v] = (Subset *)malloc(sizeof(Subset));
+        new[v]->parent = v;
+        new[v]->rank = 0;
     }
-    return newSubset;
+    return new;
 }
 
-// A utility function to find set of an element i
-// (uses path compression technique)
 int find(Subset **subsets, int i)
 {
-    // find root and make root as parent of i
-    // (path compression)
     if (subsets[i]->parent != i)
         subsets[i]->parent = find(subsets, subsets[i]->parent);
 
     return subsets[i]->parent;
 }
 
-// A function that does union of two sets of x and y
-// (uses union by rank)
 void Union(Subset **subsets, int x, int y)
 {
-    int xroot = find(subsets, x);
-    int yroot = find(subsets, y);
+    int rootSrc = find(subsets, x);
+    int rootDst = find(subsets, y);
 
-    // Attach smaller rank tree under root of high
-    // rank tree (Union by Rank)
-    if (subsets[xroot]->rank < subsets[yroot]->rank)
-        subsets[xroot]->parent = yroot;
-    else if (subsets[xroot]->rank > subsets[yroot]->rank)
-        subsets[yroot]->parent = xroot;
+    if (subsets[rootSrc]->rank < subsets[rootDst]->rank)
+        subsets[rootSrc]->parent = rootDst;
+    else if (subsets[rootSrc]->rank > subsets[rootDst]->rank)
+        subsets[rootDst]->parent = rootSrc;
 
-    // If ranks are same, then make one as root and
-    // increment its rank by one
     else
     {
-        subsets[yroot]->parent = xroot;
-        subsets[xroot]->rank++;
+        subsets[rootDst]->parent = rootSrc;
+        subsets[rootSrc]->rank++;
     }
 }
 
@@ -59,11 +49,7 @@ int returnParent(Subset *subsets)
     return subsets->parent;
 }
 
-// Subset returnSubset(Subset subsetArray[], int id){
-//     return subsetArray[id];
-// }
-
-static int counterGroupItem(int i, int qtd, Subset **subsets)
+int counterGroupItem(int i, int qtd, Subset **subsets)
 {
     int counter = 0;
     for (int k = 0; k < qtd; k++)
@@ -82,62 +68,17 @@ static void initParentArray(int k, int *parentArray)
     }
 }
 
-static int verifyParent(int parent, int *parentArray, int k)
+static int verifyParent(int position, Subset **subsets, int parent)
 {
-    for (unsigned int i = 0; i < k; i++)
+    for (int i = position - 1; i >= 0; i--)
     {
-        if (parentArray[i] == parent)
+        if (subsets[i]->parent == parent)
         {
             return 1;
-        }
-        else if (parentArray[i] == -1)
-        {
-            return 0;
         }
     }
 
     return 0;
-}
-
-void printSameFather(FILE *file, Subset **subsets, Point **points, int qtd, int k)
-{
-
-    int parentArray[k];
-    initParentArray(k, parentArray);
-    int count = 0;
-    int flag = 0;
-    for (int i = 0; i < qtd; i++)
-    {
-        if (verifyParent(returnParent(subsets[i]), parentArray, k))
-        {
-            continue;
-        }
-        count = counterGroupItem(i, qtd, subsets);
-        fprintf(file, "%s", returnId(points[i]));
-        count--;
-
-        if (count != 0)
-        {
-            fprintf(file, ",");
-        }
-
-        for (int j = i + 1; j < qtd; j++)
-        {
-
-            if (subsets[j]->parent == subsets[i]->parent)
-            {
-                fprintf(file, "%s", returnId(points[j]));
-                count--;
-                if (count != 0)
-                {
-                    fprintf(file, ",");
-                }
-            }
-        }
-        parentArray[flag] = subsets[i]->parent;
-        flag++;
-        fprintf(file, "\n");
-    }
 }
 
 void destroySubset(Subset **subset, int qntVertices)
@@ -149,3 +90,29 @@ void destroySubset(Subset **subset, int qntVertices)
 
     free(subset);
 }
+
+void changeParent(Subset **subsetsArray, int pos, int value)
+{
+    subsetsArray[pos]->parent = value;
+}
+
+void kruskal(Edge **result, Subset **subsetsArray, Edge **arrayEdges, int maxSizeResult)
+{
+    int qtdItemsResult = 0, counter = 0;
+    while (qtdItemsResult < maxSizeResult) //qnt item menor que a qnt de arestas necessárias
+    {
+        Edge *nextEdge = arrayEdges[counter];
+
+        int x = find(subsetsArray, returnIdNum(returnSrc(nextEdge)));
+        int y = find(subsetsArray, returnIdNum(returnDst(nextEdge)));
+
+        if (x != y)
+        {
+            result[qtdItemsResult] = nextEdge;
+            qtdItemsResult++;
+            Union(subsetsArray, x, y);
+        }
+
+        counter++;
+    }
+};

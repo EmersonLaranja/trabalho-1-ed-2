@@ -45,18 +45,11 @@ void fillEdge(Edge **arrayEdges, unsigned int n, Point **points, unsigned int m)
 
 void destroyEdge(Edge *edge, unsigned int tam)
 {
-  // for (int i = 0; i < tam; i++)
-  // {
-  //   free(edge->src); //!REVIEW: temos que definir se vamos excluir os pontos ao excluir um edge. Até então não vejo problema
-  //   free(edge->dst); //!REVIEW: temos que definir se vamos excluir os pontos ao excluir um edge. Até então não vejo problema
-  // }
   free(edge);
 }
 
 void printEdge(Edge *edge, unsigned int m)
 {
-  // printPoint(edge->src, m);
-  // printPoint(edge->dst, m);
   printf("%lf\n", edge->wt);
 }
 
@@ -90,12 +83,12 @@ void sortEdges(Edge **arrayEdges, unsigned int n)
   qsort(arrayEdges, (n * (n - 1)) / 2, sizeof(Edge *), compare);
 };
 
-
-Point* returnSrc(Edge *edge){
+Point *returnSrc(Edge *edge)
+{
   return edge->src;
 }
 
-
-Point* returnDst(Edge *edge){
+Point *returnDst(Edge *edge)
+{
   return edge->dst;
 }

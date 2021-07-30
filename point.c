@@ -9,6 +9,45 @@ struct point
   double *coordArray;
 };
 
+void initPointArray(Point **arrayPoints, FILE *file, int length)
+{
+  char *id;
+  char *coord;
+  char *buffer = NULL;
+  size_t bufsize = 0;
+  ssize_t qtdChar = 0;
+  const char comma[2] = ","; //onde havera o split exigido pelo strtok;
+  double coordArray[length];
+  unsigned int posi;
+  unsigned int countPoints = 0;
+
+  qtdChar = getline(&buffer, &bufsize, file);
+  while (qtdChar >= 0)
+  {
+    posi = 0;
+
+    //Le o id;
+    id = strtok(buffer, comma);
+
+    //Le primeira coordenada;
+    coord = strtok(NULL, comma);
+    while (coord != NULL)
+    {
+      coordArray[posi] = atof(coord); //armazena a coord no vetor;
+      posi++;                         // incrementa posição do vetor;
+      coord = strtok(NULL, comma);    //Lê a prox coord;
+    }
+
+    //Cria a Struct do Ponto;
+    Point *point = initPoint(point, id, coordArray, length);
+    arrayPoints[countPoints] = point;
+    countPoints++;
+
+    qtdChar = getline(&buffer, &bufsize, file);
+  }
+  free(buffer);
+};
+
 Point *initPoint(Point *point, char *id, double *coordArray, unsigned int m)
 {
   Point *newPoint = (Point *)malloc(sizeof(Point));
@@ -22,21 +61,18 @@ Point *initPoint(Point *point, char *id, double *coordArray, unsigned int m)
   return newPoint;
 }
 
-void fillIdNum(Point *point, int i)
+void fillIdNum(Point **pointArray, int length)
 {
-  point->idNum = i;
+  for (int i = 0; i < length; i++)
+  {
+    pointArray[i]->idNum = i;
+  }
 }
 
-void printPoint(Point *point, unsigned int m)
+void printPoint(Point *point /*, unsigned int m*/)
 {
 
   printf("%s ", point->id);
-
-  for (unsigned int i = 0; i < m; i++)
-  {
-    printf("%.15lf ", point->coordArray[i]);
-  }
-  printf("\n");
 }
 
 unsigned int returnIdNum(Point *point)
@@ -49,7 +85,15 @@ char *returnId(Point *point)
   return point->id;
 }
 
-Point *destroyPoint(Point *point)
+void destroyPointsArray(Point **pointsArray, int length)
+{
+  for (unsigned int i = 0; i < length; i++)
+  {
+    destroyPoint(pointsArray[i]);
+  }
+}
+
+void destroyPoint(Point *point)
 {
   free(point->coordArray);
   free(point->id);
@@ -66,4 +110,12 @@ double distance(Point *x, Point *y, unsigned int m)
   }
 
   return sqrt(sum);
+}
+
+int comparePoints(const void *a, const void *b)
+{
+  Point *x = *(Point **)a;
+  Point *y = *(Point **)b;
+
+  return strcmp(returnId(x), returnId(y));
 }

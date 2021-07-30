@@ -1,146 +1,54 @@
-
-#include <stdbool.h>
-#include "matrix.h"
 #include <time.h>
+#include "read.h"
 #include "edge.h"
 #include "UF.h"
-
-int comparePoints(const void *a, const void *b);
+#include "list.h"
 
 int main(int argc, char const *argv[])
 {
   clock_t start, stop; //variaveis para medição do tempo
-  char *buffer = NULL;
-  size_t bufsize = 0;
-  ssize_t qtdChar = 0;
-  const char comma[2] = ","; //onde havera o split;
+  start = clock();
 
-  unsigned int k;
+  verifyArgsLength(argc); //verifica se foram passados todos os argumentos
 
-  //mensagens de erro
-
-  if (argc < 4)
-  {
-    printf("ERRO: Quantidade de argumentos inválidos\n");
-    exit(1);
-  }
-
-  if (argc <= 1)
-  {
-    printf("ERRO: O diretorio de arquivos de configuracao nao foi informado\n");
-    exit(1);
-  }
-
-  //Transforma o K (char) da leitura em unisgned int;
-  k = atoi(argv[2]);
+  unsigned int k = atoi(argv[2]); //quantidade de grupos desejados
 
   // Verifica abertura de arquivos;
   FILE *inputFile = fopen(argv[1], "r");
-
-  if (inputFile == NULL)
-  {
-    printf("ERRO: falha na abertura do arquivo de entrada\n");
-    exit(1);
-  }
+  fileWasOpened(inputFile);
 
   FILE *logFile = fopen(argv[3], "w");
-
-  if (logFile == NULL)
-  {
-    printf("ERRO: falha na abertura do arquivo de saida\n");
-    exit(1);
-  }
+  fileWasOpened(logFile);
 
   unsigned int n = 0; //quantidade de elementos;
   unsigned int m = 0; //quantidade de coordenadas;
 
-  char *id;
-  char *coordenada;
-  bool boolean = true;
-  start = clock();
-  //Faz a leitura da primeira linha
-  qtdChar = getline(&buffer, &bufsize, inputFile);
-
-  while (qtdChar >= 0)
-  {
-    n++;
-
-    //Le o id;
-    id = strtok(buffer, comma);
-
-    //Conta a qtd de coordenadas
-    while ((coordenada = strtok(NULL, comma)) != NULL && boolean)
-    {
-      m++;
-    }
-    boolean = false;
-
-    qtdChar = getline(&buffer, &bufsize, inputFile);
-  }
-  //Reinicia leitura do arquivo de entrada
+  getNMvalues(inputFile, &n, &m);
+  // //Reinicia leitura do arquivo de entrada
   rewind(inputFile);
 
-  qtdChar = getline(&buffer, &bufsize, inputFile);
-
-  double vetorCoordenadas[m];
-  unsigned int posi;
-  unsigned int countPoints = 0;
-
   Point *points[n];
-
-  while (qtdChar >= 0)
-  {
-    posi = 0;
-
-    //Le o id;
-    id = strtok(buffer, comma);
-
-    //Le primeira coordenada;
-    coordenada = strtok(NULL, comma);
-    while (coordenada != NULL)
-    {
-      vetorCoordenadas[posi] = atof(coordenada); //armazena a coordenada no vetor;
-      posi++;                                    // incrementa posição do vetor;
-      coordenada = strtok(NULL, comma);          //Lê a prox coordenada;
-    }
-
-    //Cria a Struct do Ponto;
-    Point *point = initPoint(point, id, vetorCoordenadas, m);
-    points[countPoints] = point;
-    countPoints++;
-
-    qtdChar = getline(&buffer, &bufsize, inputFile);
-  }
-
-  //ORDENANDO PONTOS LEXICOGRÁFICAMENTE
+  initPointArray(points, inputFile, m);
+  //ordenando pontos lexicográficamente
   qsort(points, n, sizeof(Point *), comparePoints);
 
-  for (int i = 0; i < n; i++)
-  {
-    fillIdNum(points[i], i);
-  }
+  fillIdNum(points, n); //id numerico usado para comparação no union/find
 
-  // for (int i = 0; i < n; i++)
-  // {
-  //   printPoint(points[i], m);
-  //   printf("\n");
-  // }
+  Edge **arrayEdges = initArrayEdges(n); //vetor com as arestas que unem os pontos
 
-  Edge **arrayEdges = initArrayEdges(n);
   fillEdge(arrayEdges, n, points, m);
-  //printArrayEdges(arrayEdges, n, m);
 
-  sortEdges(arrayEdges, n); //ordenando pela distancia entre os pontos src e dst
-  //printf("\n\nTEORICAMENTE ORDENADO POR WEIGTH:\n");
-  ///printArrayEdges(arrayEdges, n, m);
+  //ordenando pela distancia entre os pontos src e dst
+  sortEdges(arrayEdges, n);
 
   Subset **subsetsArray = createSubset(n);
 
-  int counter = 0, flag = 0;
-  Edge *result[n - k]; // os Edges restantes para nossa MST
+  int counter = 0, qtdItemsResult = 0, maxSizeResult = n - k;
+  Edge *result[maxSizeResult]; // os Edges restantes para nossa MST
 
-  //while(counter<((n*(n-1)/2) - (k-1))){
-  while (flag < n - k)
+  // // kruskal(subsetsArray, arrayEdges, qtdItemsResult, maxSizeResult);
+
+  while (qtdItemsResult < maxSizeResult) //qnt item menor que a qnt de arestas necessárias
   {
     Edge *nextEdge = arrayEdges[counter];
 
@@ -149,58 +57,100 @@ int main(int argc, char const *argv[])
 
     if (x != y)
     {
-      result[flag] = nextEdge;
-      flag++;
+      result[qtdItemsResult] = nextEdge;
+      qtdItemsResult++;
       Union(subsetsArray, x, y);
     }
 
     counter++;
   }
 
-  //PRINTANDO ARVORE
-  // printf("Aqui estão as edges na MST\n");
-  // int minimumCost = 0;
-  // for (unsigned int i = 0; i < flag; ++i)
-  // {
-  //   printf("%s -- %s == %lf\n", returnId(returnSrc(result[i])), returnId(returnDst(result[i])), returnWeigth(result[i]));
-  //   minimumCost += returnWeigth(result[i]);
-  // }
-  // printf("Minimum Cost Spanning tree : %d\n", minimumCost);
+  // Vetor de pontos com k listas
 
-  //VER O PAI!!!
-  // for (unsigned int i = 0; i < n; i++)
-  // {
-  //   printf("%c PAI: %c\n", 65 + i, 65 + (returnParent(subsetsArray[i])));
-  // }
-
-  counter = 0;
-
-  printSameFather(logFile, subsetsArray, points, n, k);
-
-  // --------------------------DESTRUIÇÕES-----------------------
-  destroyArrayEdges(arrayEdges, n, m);
-
-  //destruindo o vetor de pontos
-  for (unsigned int i = 0; i < n; i++)
+  FILE *test = fopen("printpoints.txt", "w");
+  fileWasOpened(test);
+  for (int i = 0; i < n; i++)
   {
-    destroyPoint(points[i]);
+    fprintf(test, "Ponto:%s Pai: %s \n", returnId(points[i]), returnId(points[returnParent(subsetsArray[i])]));
   }
+  fclose(test);
+
+  int y;
+  for (int j = 0; j < n; j++)
+  {
+    y = j;
+    if (returnParent(subsetsArray[j]) != j)
+    {
+      while (returnParent(subsetsArray[y]) != y)
+      {
+        y = returnParent(subsetsArray[y]);
+        for (int i = 0; i < n; i++)
+        {
+          if (returnParent(subsetsArray[i]) == j)
+          {
+            changeParent(subsetsArray, i, y);
+          }
+        }
+      }
+    }
+  }
+
+  List *groupsList[k];
+  int lengGroup = 0, posi;
+  for (int i = 0; i < k; i++)
+  {
+    groupsList[i] = initList();
+  }
+  int c;
+
+  for (int i = 0, posi = 0; i < n; i++)
+  {
+    c = 0;
+    for (int j = 0; j < n; j++)
+    {
+      if (returnParent(subsetsArray[j]) == i)
+      {
+        insertList(groupsList[posi], points[j]);
+
+        c = 1;
+      }
+    }
+    if (c)
+    {
+      posi++;
+    }
+  }
+
+  /*
+  Na hora de preencher um grupo eu busco o máximo pai de j e comparo com i, se forem iguais eu coloco o elemento j no grupo
+  pra achar o máximo pai de j, eu faço um while até que uma dada posicao k do vetor seja igual ao pai
+  */
+
+  qsort(groupsList, k, sizeof(List *), compareLists);
+
+  // Ordenar groupList
+
+  printGroupList(groupsList, k, logFile);
+
+  // // --------------------------DESTRUIÇÕES-----------------------
+
+  // //destruindo grupos de listas
+  destroyGroupList(groupsList, k);
+
+  destroyArrayEdges(arrayEdges, n, m);
+  // //destruindo o vetor de pontos
+  destroyPointsArray(points, n);
+
   destroySubset(subsetsArray, n);
-  //destruindo a matriz
-  // destroyMatrix(pointsMatrix, n, n);
-  free(buffer);
+
   fclose(inputFile);
+
   fclose(logFile);
   stop = clock();
+
   double time_taken = ((double)stop - start) / CLOCKS_PER_SEC;
+
+  //Verificando o tempo de execução
   printf("\nTEMPO %.4f\n", time_taken);
   return 0;
-}
-
-int comparePoints(const void *a, const void *b)
-{
-  Point *x = *(Point **)a;
-  Point *y = *(Point **)b;
-
-  return strcmp(returnId(x), returnId(y));
 }

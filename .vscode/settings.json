@@ -1,6 +1,15 @@
 {
   "files.associations": {
     ".env": "dotenv",
-    "uf.h": "c"
+    "uf.h": "c",
+    "edge.h": "c",
+    "stdlib.h": "c",
+    "stdio.h": "c",
+    "point.h": "c",
+    "list.h": "c",
+    "algorithm": "c",
+    "random": "c",
+    "read.h": "c",
+    "string.h": "c"
   }
 }
